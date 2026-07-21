@@ -1,0 +1,53 @@
+## Full official template available at:
+## https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Bb]in/
+[Oo]bj/
+
+# Visual Studio cache, logs, and temporary files
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.bbl
+*.log
+
+# JetBrains Rider / IntelliJ / WebStorm IDE files
+.idea/
+*.sln.iml
+
+# Visual Studio Code workspace settings
+.vscode/
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/tasks.json
+
+# NuGet Packages directory
+*.nupkg
+*.snupkg
+packages/
+# Exclude paket.lock from gitignore if using Paket
+# !paket.lock
+
+# Test results and code coverage
+BenchmarkDotNet.Artifacts/
+TestResults/
+*.clog
+*.coverage
+*.coveragexml
+
+# Local application secrets and configuration overrides
+# (Uncomment if you want to explicitly hide environment configs)
+# appsettings.Development.json
+# *.secrets.json
+# .env
+
+# Operating System specific files
+Thumbs.db
+.DS_Store

@@ -1,0 +1,23 @@
+
+POST http://localhost:5163/games
+Content-Type: application/json
+
+{
+    "name": "Supermario",
+    "genre":"Platform",
+    "price":59.99,
+    "releaseDate":"2013-10-20"
+}
+
+
+GET http://localhost:5163/games
+
+
+## Get by id
+GET http://localhost:5163/games/3
+
+
+
+DELETE http://localhost:5163/
+
+PUT http://localhost:5163/

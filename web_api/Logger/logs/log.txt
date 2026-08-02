@@ -1,0 +1,145 @@
+1.
+Question 1
+A startup is choosing a framework for developing its web API. They need a cost-effective solution that supports high performance and scalability. Why is ASP.NET Core a good choice?
+
+
+It requires Windows servers, reducing hosting complexity
+
+It automatically scales without additional configuration
+
+It is free, open-source, and optimized for high performance
+
+It eliminates the need for third-party security tools
+
+1 point
+2.
+Question 2
+A company is deploying an ASP.NET Core web API to a cloud environment. To ensure a smooth setup, they need to correctly configure the API project before adding controllers. What is the first step?
+
+
+
+Create a Startup.cs file to manually manage dependency injection
+
+Configure Program.cs to define services, middleware, and application settings
+
+Deploy an empty API to the cloud and configure middleware later
+
+Define all API routes in appsettings.json before implementing business logic
+
+1 point
+3.
+Question 3
+A developer is debugging an issue where certain API requests are not reaching the expected controller actions in their ASP.NET Core application. They suspect a problem with routing. What is a key feature of ASP.NET Core routing that they should verify?
+
+
+
+Routes are only defined in the Startup.cs file and cannot be customized elsewhere
+
+ASP.NET Core requires explicit route definitions for every possible URL pattern
+
+Routing is automatically handled by the .NET runtime without developer configuration
+
+Routes are defined using templates that map HTTP requests to specific controller actions
+
+1 point
+4.
+Question 4
+A startup is choosing ASP.NET Core for its API development. They want a flexible solution where they can add features as needed. How does ASP.NET Core’s architecture help?
+
+
+
+It supports modular development, allowing features to be added incrementally
+
+It limits applications to a single deployment model
+
+It requires all features to be included at the start of development
+
+It prevents developers from using third-party libraries
+
+1 point
+5.
+Question 5
+A company is building a large-scale ASP.NET Core application with multiple interconnected services, including authentication, payment processing, and notifications. They want to improve code maintainability and simplify service management. How does dependency injection help in this scenario?
+
+
+
+It allows services to be injected into components rather than hardcoded, promoting loose coupling
+
+It eliminates the need for manually registering services in the application
+
+It ensures only one instance of each service exists across all API requests
+
+It improves API response time by caching service instances globally
+
+1 point
+6.
+Question 6
+A team is implementing dependency injection in their ASP.NET Core application. They need to decide which service lifetime to use for different components. Which of the following correctly describes the differences between DI lifetimes?
+
+
+
+Scoped services are faster than Singleton because they are created per request
+
+Singleton creates one instance for the app’s lifetime, Scoped creates one per request, and Transient creates a new instance each time it is requested
+
+Singleton is created per request, while Scoped and Transient are shared across all requests
+
+Transient services are shared across requests, while Scoped services are always recreated
+
+1 point
+7.
+Question 7
+An e-commerce company is developing a web API in ASP.NET Core. They need to ensure that unexpected errors, such as database failures or invalid API requests, are handled consistently across all endpoints without exposing sensitive information. What is the best approach for managing errors globally?
+
+
+
+Require each controller action to include a try-catch block for exception handling
+
+Implement middleware to catch unhandled exceptions and return structured error responses
+
+Allow unhandled exceptions to be displayed in the API response to assist with debugging
+
+Store all exceptions in a static list to manually review errors later
+
+1 point
+8.
+Question 8
+A cloud-based API is experiencing intermittent failures, and the development team needs to analyze logs to identify the root cause. To ensure efficient troubleshooting, which logging approach should they implement?
+
+
+Disable logging in non-development environments to avoid unnecessary data collection
+
+Use structured logging with log levels and centralized storage to improve debugging
+
+Log errors directly to the console and avoid external storage for performance reasons
+
+Store all logs as JSON objects but do not include timestamps or log levels
+
+1 point
+9.
+Question 9
+A development team is deploying an ASP.NET Core web API to a cloud environment. They need to configure different logging levels for development and production to ensure efficient monitoring while minimizing unnecessary logs in production. Where should they define the logging level settings?
+
+
+
+Manually specify log levels in every controller’s constructor
+
+In the appsettings.json file under the Logging section
+
+Use inline comments in API methods to control logging output
+
+Configure logging levels using a database table that stores log settings
+
+1 point
+10.
+Question 10
+A company is troubleshooting an ASP.NET Core API where authentication is not working as expected. What could be the issue with middleware ordering?
+
+
+Middleware only affects application startup, not request handling
+
+Authentication middleware must be placed before authorization middleware to function correctly
+
+Middleware must be added after defining API endpoints
+
+Middleware executes randomly, so order does not matter

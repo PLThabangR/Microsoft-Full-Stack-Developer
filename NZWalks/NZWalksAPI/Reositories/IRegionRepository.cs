@@ -8,12 +8,13 @@ namespace NZWalksAPI.Reositories
         Task<List<Region>> GetAllAsync();
 
         //Get Region by Id
-        Task<Region> GetAsync(Guid id);
+        //Region can be null
+        Task<Region?> GetAsync(Guid id);
         //Add Region
         Task<Region> AddAsync(Region region);
         //Update Region
-        Task<Region> UpdateAsync(Guid id, Region region);
+        Task<Region?> UpdateAsync(Guid id, Region region);
         //Delete Region
-        Task<Region> DeleteAsync(Guid id);
+        Task<Region?> DeleteAsync(Guid id);
     }
 }

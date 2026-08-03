@@ -5,6 +5,7 @@ using Microsoft.VisualBasic;
 using NZWalksAPI.Data;
 using NZWalksAPI.Models.Domain;
 using NZWalksAPI.Models.Dtos;
+using NZWalksAPI.Reositories;
 
 namespace NZWalksAPI.Controllers
 {
@@ -14,14 +15,16 @@ namespace NZWalksAPI.Controllers
     {
         // private variable to hold the region repository
         private readonly NZWalkDBContext nZWalkDBContext;
+        private readonly IRegionRepository regionRepository;
 
         //inject the region repository into the controller
         //Constructor injection of the region repository
-        public RegionsController(NZWalkDBContext nZWalkDBContext)
+        public RegionsController(NZWalkDBContext nZWalkDBContext,IRegionRepository regionRepository)
         {
 
             //assign the injected region repository to the private variable
             this.nZWalkDBContext = nZWalkDBContext;
+            this.regionRepository = regionRepository;
         }
 
         [HttpGet]
@@ -29,7 +32,7 @@ namespace NZWalksAPI.Controllers
         public async  Task<IActionResult> GetAllRegions()
         {
             //Get all regions from the database
-            var regionDomain = await nZWalkDBContext.Regions.ToListAsync();
+            var regionDomain = await regionRepository.GetAllAsync();
 
             // domain models to dtos if needed, but for now we will return the domain models directly
             var regionsDto = new List<RegionDto>();

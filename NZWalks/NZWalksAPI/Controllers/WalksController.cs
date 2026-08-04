@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using NZWalksAPI.CustomAction;
 using NZWalksAPI.Models.Domain;
 using NZWalksAPI.Models.Dtos;
 using NZWalksAPI.Reositories;
@@ -20,8 +21,10 @@ namespace NZWalksAPI.Controllers
     }
     [HttpPost]
 // POST : https://localhost:7000/api/Walks
+ [ValidateModel]
 public async Task<IActionResult> AddWalkAsync([FromBody] CreateWalkDto createWalkDto)
 {  
+    
     //map dto to domain model
         var walkDomain = mapper.Map<Walk>(createWalkDto);
 
@@ -32,6 +35,8 @@ public async Task<IActionResult> AddWalkAsync([FromBody] CreateWalkDto createWal
         var walkDto = mapper.Map<WalkDto>(walkDomain);
 
         return  Ok(walkDto); //return as 201 created
+    
+    
 } //End of add method
 
     //GET : https://localhost:7000/api/Walks
@@ -65,8 +70,11 @@ public async Task<IActionResult> AddWalkAsync([FromBody] CreateWalkDto createWal
     //PUT : https://localhost:7000/api/Walks/{id}
     [HttpPut]
     [Route("{id:guid}")] //,make it type safe
-    public async Task<IActionResult> UpdateWalkAsync([FromRoute] Guid id, [FromBody] UpdateWalkDto updateWalkDto)
-    {
+        [ValidateModel]
+        public async Task<IActionResult> UpdateWalkAsync([FromRoute] Guid id, [FromBody] UpdateWalkDto updateWalkDto)
+    {   
+        
+    
         //MAp dto to doimain model
         var walkDomain = mapper.Map<Walk>(updateWalkDto);
         //Check if the region exists in the database the save
@@ -80,6 +88,7 @@ public async Task<IActionResult> AddWalkAsync([FromBody] CreateWalkDto createWal
         //convert domain model to dto
         var walkDto = mapper.Map<WalkDto>(walkDomain);
         return Ok(walkDto);
+       
     }//End of update method
 
     //DELETE an existing region

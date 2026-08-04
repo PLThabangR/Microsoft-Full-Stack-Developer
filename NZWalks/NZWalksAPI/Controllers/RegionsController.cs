@@ -1,8 +1,10 @@
-﻿using AutoMapper;
+﻿using System.ComponentModel.DataAnnotations;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
+using NZWalksAPI.CustomAction;
 using NZWalksAPI.Data;
 using NZWalksAPI.Models.Domain;
 using NZWalksAPI.Models.Dtos;
@@ -70,46 +72,59 @@ namespace NZWalksAPI.Controllers
         ///Create a new region
         //POST : https://localhost:7000/api/Regions
         [HttpPost]
-        public async Task<IActionResult> CreateRegion([FromBody] RegionDto regionDto)
+        [ValidateModel]
+        public async Task<IActionResult> CreateRegion([FromBody] AddRegionDto addRegionDto)
         {
-            //convert dto to domain model
-           var regionDomain = mapper.Map<Region>(regionDto);
-            //save to database
-            regionDomain = await regionRepository.AddAsync(regionDomain);
+           
+                //Validate the incoming request
 
 
-            //convert domain model to dto
-          var regionDtoToReturn = mapper.Map<RegionDto>(regionDomain);
+                //convert dto to domain model
+                var regionDomain = mapper.Map<Region>(addRegionDto);
+                //save to database
+                regionDomain = await regionRepository.AddAsync(regionDomain);
 
-            //return the created region
-            return CreatedAtAction(nameof(GetRegionById), new { id = regionDtoToReturn.Id }, regionDtoToReturn);
+
+                //convert domain model to dto
+                var regionDtoToReturn = mapper.Map<RegionDto>(regionDomain);
+
+                //return the created region
+                return CreatedAtAction(nameof(GetRegionById), new { id = regionDtoToReturn.Id }, regionDtoToReturn);
+
+        
+
+         
         }// end of CreateRegion
 
     //UPDATE an existing region
     //PUT : https://localhost:7000/api/Regions/{id}
     [HttpPut]
     [Route("{id:guid}")] //,make it type safe
-
-    public async Task<IActionResult> UpdateRegion([FromRoute] Guid id, [FromBody] UpdateRegionDto updateRegionDto)
+        [ValidateModel]
+        public async Task<IActionResult> UpdateRegion([FromRoute] Guid id, [FromBody] UpdateRegionDto updateRegionDto)
     {
-            //MAp dto to doimain model
-            var regionDomain = mapper.Map<Region>( updateRegionDto);
+            
+                //MAp dto to doimain model
+                var regionDomain = mapper.Map<Region>(updateRegionDto);
 
 
-            //Check if the region exists in the database the save
-            var existingRegion = await regionRepository.UpdateAsync(id, regionDomain);
+                //Check if the region exists in the database the save
+                var existingRegion = await regionRepository.UpdateAsync(id, regionDomain);
 
-            if(existingRegion == null)
-            {
-                return NotFound();
-            }
+                if (existingRegion == null)
+                {
+                    return NotFound();
+                }
 
-            //convert dto to domain model
+                //convert dto to domain model
 
-            //Convert domain model to dto
-            var regiondto = mapper.Map<RegionDto>(existingRegion);
+                //Convert domain model to dto
+                var regiondto = mapper.Map<RegionDto>(existingRegion);
 
-            return Ok(regiondto);
+                return Ok(regiondto);
+           
+
+            
     }// end of UpdateRegion
 
         //DELETE an existing region

@@ -42,7 +42,63 @@ public async Task<IActionResult> AddWalkAsync([FromBody] CreateWalkDto createWal
         //convert domain model to dto list
         var walksDto = mapper.Map<List<WalkDto>>(walksDomain);
         return Ok(walksDto);
-    }
+    }//End of get method
+
+    //GET : https://localhost:7000/api/Walks/{id}
+    [HttpGet]
+    [Route("{id:guid}")] //,make it type safe
+    public async Task<IActionResult> GetWalkAsync([FromRoute]Guid id)
+    {
+        //Get the region from the database
+        var walkDomain = await walkRepository.GetAsync(id);
+        //check if the region is null
+        if (walkDomain == null)
+        {
+            return NotFound();
+        }
+        //convert domain model to dto
+        var walkDto = mapper.Map<WalkDto>(walkDomain);
+        return Ok(walkDto);
+    }//End of get method
+
+    //UPDATE
+    //PUT : https://localhost:7000/api/Walks/{id}
+    [HttpPut]
+    [Route("{id:guid}")] //,make it type safe
+    public async Task<IActionResult> UpdateWalkAsync([FromRoute] Guid id, [FromBody] UpdateWalkDto updateWalkDto)
+    {
+        //MAp dto to doimain model
+        var walkDomain = mapper.Map<Walk>(updateWalkDto);
+        //Check if the region exists in the database the save
+        walkDomain = await walkRepository.UpdateAsync(id, walkDomain);
+            //Not found
+        if (walkDomain == null)
+        {
+            return NotFound();
+        }
+
+        //convert domain model to dto
+        var walkDto = mapper.Map<WalkDto>(walkDomain);
+        return Ok(walkDto);
+    }//End of update method
+
+    //DELETE an existing region
+    //DELETE : https://localhost:7000/api/Regions/{id}
+    [HttpDelete]
+    [Route("{id:guid}")] //,make it type safe
+    public async Task<IActionResult> DeleteWalkAsync([FromRoute] Guid id)
+    {
+        //Check if the region exists in the database
+        var walkDomain = await walkRepository.DeleteAsync(id);
+        //check if it exist
+        if (walkDomain == null)
+        {
+            return NotFound();
+        }
+        //convert domain model to dto
+        var walkDto = mapper.Map<WalkDto>(walkDomain);
+        return Ok(walkDto);
+    }//End of delete method
 
 
 

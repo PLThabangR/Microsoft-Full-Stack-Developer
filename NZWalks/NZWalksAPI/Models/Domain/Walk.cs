@@ -13,12 +13,14 @@ namespace NZWalksAPI.Models.Domain
         public double LengthInKm { get; set; }
 
         public string? WalkImageUrl { get; set; } = string.Empty;
+        //Relationships one to one
         public Guid RegionId { get; set; }
+        public Guid DifficultyId { get; set; }
 
         //navigateion properties
         public Region? Region { get; set; }
 
-        public Guid DifficultyId { get; set; }
+       
         //navigateion properties
         public Difficulty? Difficulty { get; set;}
     }

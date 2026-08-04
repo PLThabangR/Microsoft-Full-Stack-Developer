@@ -11,9 +11,11 @@ namespace NZWalksAPI.Models.Dtos
         public double LengthInKm { get; set; }
 
         public string? WalkImageUrl { get; set; } = string.Empty;
-        public Guid RegionId { get; set; }
 
-        public Guid DifficultyId { get; set; }
-      
+        //Navigation properties to get the region and difficulty details
+        // This varaibles the include merthod will use this to get more details
+        public DifficultyDto? Difficulty { get; set; }
+        public RegionDto? Region { get; set; }
+       
     }
 }

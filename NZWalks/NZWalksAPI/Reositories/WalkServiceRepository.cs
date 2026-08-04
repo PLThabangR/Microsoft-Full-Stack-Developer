@@ -45,14 +45,14 @@ namespace NZWalksAPI.Reositories
 
         public async Task<List<Walk>> GetAllAsync()
         {  //Get all walks from the database
-
-            return await dbContext.Walks.ToListAsync();
+            ///Include details from region and difficulty tables
+            return await dbContext.Walks.Include("Difficulty").Include("Region").ToListAsync();
            
         }
 
         public async Task<Walk?> GetAsync(Guid id)
-        {
-            return await dbContext.Walks.FirstOrDefaultAsync(x => x.id == id);
+        {           //Get the region from the database if not exist it will return null
+            return await dbContext.Walks.Include("Difficulty").Include("Region").FirstOrDefaultAsync(x => x.id == id);
         }
 
         public async Task<Walk?> UpdateAsync(Guid id, Walk walk)
@@ -69,6 +69,8 @@ namespace NZWalksAPI.Reositories
             existingWalk.Description= walk.Description;
             existingWalk.LengthInKm = walk.LengthInKm;
             existingWalk.WalkImageUrl= walk.WalkImageUrl;
+            existingWalk.RegionId = walk.RegionId;
+            existingWalk.DifficultyId = walk.DifficultyId;
 
             //save changes
             await dbContext.SaveChangesAsync();

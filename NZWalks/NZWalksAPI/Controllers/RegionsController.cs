@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
@@ -13,18 +14,18 @@ namespace NZWalksAPI.Controllers
     [ApiController]
     public class RegionsController : ControllerBase
     {
-        // private variable to hold the region repository
-        private readonly NZWalkDBContext nZWalkDBContext;
+        // private variable to hold the region repositor
         private readonly IRegionRepository regionRepository;
-
+        private readonly IMapper mapper;
         //inject the region repository into the controller
         //Constructor injection of the region repository
-        public RegionsController(NZWalkDBContext nZWalkDBContext,IRegionRepository regionRepository)
+        public RegionsController(IRegionRepository regionRepository,IMapper mapper)
         {
 
             //assign the injected region repository to the private variable
-            this.nZWalkDBContext = nZWalkDBContext;
+           
             this.regionRepository = regionRepository;
+            this.mapper = mapper;
         }
 
         [HttpGet]
@@ -35,19 +36,10 @@ namespace NZWalksAPI.Controllers
             var regionDomain = await regionRepository.GetAllAsync();
 
             // domain models to dtos if needed, but for now we will return the domain models directly
-            var regionsDto = new List<RegionDto>();
-            //convert domain models to dtos
-            //loop through each region
-            foreach (var region in regionDomain)
-            {   //add the region to the list of regionsDTo
-                regionsDto.Add(new RegionDto()
-                {
-                    Id = region.Id,
-                    Code = region.Code,
-                    Name = region.Name,
-                    imageUrl = region.imageUrl
-                });
-            }
+            
+            ///Use auuto mapper this replace the need for a loop
+            var regionsDto = mapper.Map<List<RegionDto>>(regionDomain);
+            
 
             return Ok(regionsDto);
         }// end of GetAllRegions
@@ -70,13 +62,8 @@ namespace NZWalksAPI.Controllers
             }
 
             // convert domain model to dto
-            var regionDto = new RegionDto()
-            {
-                Id = region.Id,
-                Code = region.Code,
-                Name = region.Name,
-                imageUrl = region.imageUrl
-            };
+            ///Use auuto mapper this replace the need for a loop
+           var regionDto = mapper.Map<RegionDto>(region);
             return Ok(regionDto);
         }// end of GetRegionById
 
@@ -86,25 +73,13 @@ namespace NZWalksAPI.Controllers
         public async Task<IActionResult> CreateRegion([FromBody] RegionDto regionDto)
         {
             //convert dto to domain model
-            var regionDomain = new Region()
-            {
-                Id = Guid.NewGuid(),
-                Code = regionDto.Code,
-                Name = regionDto.Name,
-                imageUrl = regionDto.imageUrl
-            };
+           var regionDomain = mapper.Map<Region>(regionDto);
             //save to database
             regionDomain = await regionRepository.AddAsync(regionDomain);
 
 
             //convert domain model to dto
-            var regionDtoToReturn = new RegionDto()
-            {
-                Id = regionDomain.Id,
-                Code = regionDomain.Code,
-                Name = regionDomain.Name,
-                imageUrl = regionDomain.imageUrl
-            };
+          var regionDtoToReturn = mapper.Map<RegionDto>(regionDomain);
 
             //return the created region
             return CreatedAtAction(nameof(GetRegionById), new { id = regionDtoToReturn.Id }, regionDtoToReturn);
@@ -118,14 +93,7 @@ namespace NZWalksAPI.Controllers
     public async Task<IActionResult> UpdateRegion([FromRoute] Guid id, [FromBody] UpdateRegionDto updateRegionDto)
     {
             //MAp dto to doimain model
-            //Convert domain model to dto
-            var regionDomain = new Region()
-            {
-                Id = id,
-                Name = updateRegionDto.Name,
-                Code = updateRegionDto.Code,
-                imageUrl = updateRegionDto.imageUrl
-            };
+            var regionDomain = mapper.Map<Region>( updateRegionDto);
 
 
             //Check if the region exists in the database the save
@@ -139,13 +107,7 @@ namespace NZWalksAPI.Controllers
             //convert dto to domain model
 
             //Convert domain model to dto
-            var regiondto = new RegionDto()
-            {
-                Id = existingRegion.Id,
-                Code = existingRegion.Code,
-                Name = existingRegion.Name,
-                imageUrl = existingRegion.imageUrl
-            };
+            var regiondto = mapper.Map<RegionDto>(existingRegion);
 
             return Ok(regiondto);
     }// end of UpdateRegion
@@ -167,13 +129,7 @@ namespace NZWalksAPI.Controllers
             // Remove does not have a async method
              
             //Convert domain model to dto
-            var regiondto = new RegionDto()
-            {
-                Id = existingRegion.Id,
-                Code = existingRegion.Code,
-                Name = existingRegion.Name,
-                imageUrl = existingRegion.imageUrl
-            };
+            var regiondto = mapper.Map<RegionDto>(existingRegion);
             return Ok(regiondto);
         }// end of DeleteRegion
 

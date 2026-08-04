@@ -1,0 +1,11 @@
+namespace NZWalksAPI.Models.Dtos
+{
+    public class AddRegionDto
+    {
+        
+        public string Name { get; set; } = string.Empty;
+        public string Code { get; set; } = string.Empty;
+        public string? imageUrl { get; set; }
+    }
+}
+

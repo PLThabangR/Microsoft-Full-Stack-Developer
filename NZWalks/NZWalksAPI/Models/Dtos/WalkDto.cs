@@ -1,12 +1,10 @@
-﻿using System.Security.Principal;
+﻿using NZWalksAPI.Models.Domain;
 
-namespace NZWalksAPI.Models.Domain
+namespace NZWalksAPI.Models.Dtos
 {
-    public class Walk
+    public class WalkDto
     {
-
         public Guid id { get; set; }
-    
         public string Name { get; set; } = string.Empty;
 
         public string Description { get; set; } = string.Empty;
@@ -15,11 +13,7 @@ namespace NZWalksAPI.Models.Domain
         public string? WalkImageUrl { get; set; } = string.Empty;
         public Guid RegionId { get; set; }
 
-        //navigateion properties
-        public Region? Region { get; set; }
-
         public Guid DifficultyId { get; set; }
-        //navigateion properties
-        public Difficulty? Difficulty { get; set;}
+      
     }
 }

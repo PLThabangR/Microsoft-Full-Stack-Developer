@@ -1,0 +1,80 @@
+﻿using Microsoft.EntityFrameworkCore;
+using NZWalksAPI.Data;
+using NZWalksAPI.Models.Domain;
+
+namespace NZWalksAPI.Reositories
+{
+
+    public class WalkServiceRepository : IWalkRepository
+    {
+
+        //Inject dbContext
+        private readonly NZWalkDBContext dbContext;
+
+        public WalkServiceRepository(NZWalkDBContext dBContext)
+        {
+            this.dbContext = dBContext;
+        }
+
+        public async Task<Walk> AddAsync(Walk walk)
+        {   
+            //add to database
+            await dbContext.Walks.AddAsync(walk);
+            //save changes
+            await dbContext.SaveChangesAsync();
+            //return the created
+            return walk;
+        }
+
+        public async Task<Walk?> DeleteAsync(Guid id)
+        {
+           //Check if exist 
+           var existingWalk =await  dbContext.Walks.FirstOrDefaultAsync(x => x.id == id);
+
+            if (existingWalk == null)
+            {
+                return null;
+            }
+            //remove from database
+            dbContext.Walks.Remove(existingWalk);
+            //save changes
+           await  dbContext.SaveChangesAsync();
+            //return the deleted
+            return existingWalk;
+        }
+
+        public async Task<List<Walk>> GetAllAsync()
+        {  //Get all walks from the database
+
+            return await dbContext.Walks.ToListAsync();
+           
+        }
+
+        public async Task<Walk?> GetAsync(Guid id)
+        {
+            return await dbContext.Walks.FirstOrDefaultAsync(x => x.id == id);
+        }
+
+        public async Task<Walk?> UpdateAsync(Guid id, Walk walk)
+        {   
+            // check if region exists
+            var existingWalk = await dbContext.Walks.FirstOrDefaultAsync(x => x.id == id);
+            // update region if it exists
+            if (existingWalk == null)
+            {
+                return null;
+            }
+            //update values
+            existingWalk.Name = walk.Name;
+            existingWalk.Description= walk.Description;
+            existingWalk.LengthInKm = walk.LengthInKm;
+            existingWalk.WalkImageUrl= walk.WalkImageUrl;
+
+            //save changes
+            await dbContext.SaveChangesAsync();
+            // return the updated region
+            return existingWalk;
+            
+        }
+    }
+}

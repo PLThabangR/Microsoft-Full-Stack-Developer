@@ -18,8 +18,11 @@ builder.Services.AddSwaggerGen();
 ///Inject deContext so it can be used anywh where and provide dbContext 
 /// the appplication will manage the instances of the dbContext
 builder.Services.AddDbContext<NZWalkDBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 //Inject the region repository into the controller
 builder.Services.AddScoped<IRegionRepository, SQLRegionRepository>();
+// Inject the walk repository into the controller
+builder.Services.AddScoped<IWalkRepository, WalkServiceRepository>();
 
  
 //Inject auto mapper 

@@ -1,5 +1,6 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using NZWalksAPI.Data;
@@ -20,7 +21,29 @@ builder.Services.AddSwaggerGen();
 
 ///Inject deContext so it can be used anywh where and provide dbContext 
 /// the appplication will manage the instances of the dbContext
-builder.Services.AddDbContext<NZWalkDBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContext<NZWalkDBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("NZWalksConnection")));
+//inject auth db context
+builder.Services.AddDbContext<AuthDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("NZWalkAuthConnection")));
+//Inject identity Solutions
+
+// Configure Identity
+builder.Services.AddIdentityCore<IdentityUser>() // Add Identity
+    .AddRoles<IdentityRole>() // Add role support
+    .AddEntityFrameworkStores<AuthDbContext>() // Use the AuthDbContext for storage
+    .AddDefaultTokenProviders() // Add token providers for password  reset, email confirmation
+    .AddTokenProvider<DataProtectorTokenProvider<IdentityUser>>("NZWalks"); // Add token providers
+
+
+//Identity options for password policy
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    options.Password.RequireDigit = false;
+    options.Password.RequireLowercase = false;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequiredLength = 6;
+    options.Password.RequiredUniqueChars = 1;
+});
 
 //Inject the region repository into the controller
 builder.Services.AddScoped<IRegionRepository, SQLRegionRepository>();

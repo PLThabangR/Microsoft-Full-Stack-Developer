@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿
+using AutoMapper;
 using NZWalksAPI.Models.Domain;
 using NZWalksAPI.Models.Dtos;
 

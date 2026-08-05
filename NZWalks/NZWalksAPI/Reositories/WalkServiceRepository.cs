@@ -43,7 +43,7 @@ namespace NZWalksAPI.Reositories
             return existingWalk;
         }
 
-        public async Task<List<Walk>> GetAllAsync(string? filterOn=null, string? filterQuery=null)
+        public async Task<List<Walk>> GetAllAsync(string? filterOn=null, string? filterQuery=null, string? sortBy=null,bool? isAscending=true)
         {  
             //Include details from region and difficulty tables as Querables
              var walks =  dbContext.Walks.Include("Difficulty").Include("Region").AsQueryable();
@@ -58,11 +58,45 @@ namespace NZWalksAPI.Reositories
                     walks = walks.Where(x => x.Name.Contains(filterQuery));
 
                 }
-              
+
+                //check which column fliterOn is at Description
+                if (filterOn.Equals("Description", StringComparison.OrdinalIgnoreCase) )
+                {  //Filter using the column and the query
+                    walks = walks.Where(x => x.Description.Contains(filterQuery));
+                    }
+
+               // check which column fliterOn is at Km
+                if (filterOn.Equals("Length", StringComparison.OrdinalIgnoreCase) )
+                {  //Filter using the column and the query
+                    walks = walks.Where(x => x.LengthInKm.ToString().Contains(filterQuery));
+                    }
+              }//end of filtering if
+
+            ///Sorting by columns
+            if (string.IsNullOrWhiteSpace(sortBy) == false)
+            {
+                if (sortBy.Equals("Name", StringComparison.OrdinalIgnoreCase))
+                {
+                    walks = (isAscending ?? true) ? walks.OrderBy(x => x.Name) : walks.OrderByDescending(x => x.Name);
+                }
+                else if (sortBy.Equals("Description", StringComparison.OrdinalIgnoreCase))
+                {
+                    walks = (isAscending ?? true) ? walks.OrderBy(x => x.Description) : walks.OrderByDescending(x => x.Description);
+                }
+                else if (sortBy.Equals("Length", StringComparison.OrdinalIgnoreCase))
+                {
+                    walks = (isAscending ?? true) ? walks.OrderBy(x => x.LengthInKm) : walks.OrderByDescending(x => x.LengthInKm);
+                }
+            }//End sort
+
+            // If no sort specified, use default
+            if (string.IsNullOrWhiteSpace(sortBy))
+            {
+                walks = walks.OrderBy(x => x.Name); // Default sort
             }
 
-                //return query results to User
-                return await walks.ToListAsync();
+            //return query results to User
+            return await walks.ToListAsync();
             //Get all walks from the database
             ///Include details from region and difficulty tables
            // return await dbContext.Walks.Include("Difficulty").Include("Region").ToListAsync();

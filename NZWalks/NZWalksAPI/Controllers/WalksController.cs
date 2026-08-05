@@ -42,9 +42,10 @@ public async Task<IActionResult> AddWalkAsync([FromBody] CreateWalkDto createWal
     //GET : https://localhost:7000/api/Walks
     //GET with filters : https://localhost:7000/api/Walks?rfilterOn=name&filterQuery=up
     [HttpGet]
-    public async Task<IActionResult> GetAllWalksAsync([FromQuery] string? filterOn, [FromQuery] string? filterQuery)
+    public async Task<IActionResult> GetAllWalksAsync([FromQuery] string? filterOn, [FromQuery] string? filterQuery, [FromQuery] string? sortBy, [FromQuery] bool? isAscending)
     {   //Get all walks from the database
-        var walksDomain = await walkRepository.GetAllAsync(filterOn, filterQuery);
+                //if ascend is nullable make it a true
+        var walksDomain = await walkRepository.GetAllAsync(filterOn, filterQuery, sortBy, isAscending?? true);
         //convert domain model to dto list
         var walksDto = mapper.Map<List<WalkDto>>(walksDomain);
         return Ok(walksDto);

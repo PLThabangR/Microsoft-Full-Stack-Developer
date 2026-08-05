@@ -40,10 +40,11 @@ public async Task<IActionResult> AddWalkAsync([FromBody] CreateWalkDto createWal
 } //End of add method
 
     //GET : https://localhost:7000/api/Walks
+    //GET with filters : https://localhost:7000/api/Walks?rfilterOn=name&filterQuery=up
     [HttpGet]
-    public async Task<IActionResult> GetAllWalksAsync()
+    public async Task<IActionResult> GetAllWalksAsync([FromQuery] string? filterOn, [FromQuery] string? filterQuery)
     {   //Get all walks from the database
-        var walksDomain = await walkRepository.GetAllAsync();
+        var walksDomain = await walkRepository.GetAllAsync(filterOn, filterQuery);
         //convert domain model to dto list
         var walksDto = mapper.Map<List<WalkDto>>(walksDomain);
         return Ok(walksDto);

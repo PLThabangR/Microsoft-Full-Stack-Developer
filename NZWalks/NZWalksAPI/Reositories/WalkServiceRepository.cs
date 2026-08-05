@@ -43,10 +43,29 @@ namespace NZWalksAPI.Reositories
             return existingWalk;
         }
 
-        public async Task<List<Walk>> GetAllAsync()
-        {  //Get all walks from the database
+        public async Task<List<Walk>> GetAllAsync(string? filterOn=null, string? filterQuery=null)
+        {  
+            //Include details from region and difficulty tables as Querables
+             var walks =  dbContext.Walks.Include("Difficulty").Include("Region").AsQueryable();
+            
+            //Filtering
+            //If filterOn and filterQuery are not null
+            if (string.IsNullOrWhiteSpace(filterOn)==false && string.IsNullOrWhiteSpace(filterQuery)==false)
+            {
+                //check which column fliterOn is at
+                if (filterOn.Equals("Name", StringComparison.OrdinalIgnoreCase) )
+                {  //Filter using the column and the query
+                    walks = walks.Where(x => x.Name.Contains(filterQuery));
+
+                }
+              
+            }
+
+                //return query results to User
+                return await walks.ToListAsync();
+            //Get all walks from the database
             ///Include details from region and difficulty tables
-            return await dbContext.Walks.Include("Difficulty").Include("Region").ToListAsync();
+           // return await dbContext.Walks.Include("Difficulty").Include("Region").ToListAsync();
            
         }
 

@@ -1,4 +1,7 @@
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using NZWalksAPI.Data;
 using NZWalksAPI.Mappings;
 using NZWalksAPI.Reositories;
@@ -28,6 +31,21 @@ builder.Services.AddScoped<IWalkRepository, WalkServiceRepository>();
 //Inject auto mapper 
 builder.Services.AddAutoMapper(cfg => cfg.AddProfile(typeof(AutoMapperProfile)));
 
+
+//Add Authentication to the sevices
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+.AddJwtBearer(options => options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+{   //validate the token
+   ValidateIssuer = true,
+   //validate the audience
+   ValidateAudience = true,
+   ValidateLifetime = true,
+   ValidateIssuerSigningKey = true, //validate the signing key'
+   ValidIssuer = builder.Configuration["Jwt:Issuer"],
+   ValidAudience = builder.Configuration["Jwt:Audience"],
+   IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -40,7 +58,8 @@ if (app.Environment.IsDevelopment())
 
 //Middleware
 app.UseHttpsRedirection();
-
+//
+app.UseAuthentication();
 //
 app.UseAuthorization();
 

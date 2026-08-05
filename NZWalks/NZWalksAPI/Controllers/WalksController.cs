@@ -40,9 +40,11 @@ public async Task<IActionResult> AddWalkAsync([FromBody] CreateWalkDto createWal
 } //End of add method
 
     //GET : https://localhost:7000/api/Walks
-    //GET with filters : https://localhost:7000/api/Walks?rfilterOn=name&filterQuery=up
+    
+    //GET with filtering,sorting and pagination 
+    // : https://localhost:7000/api/Walks?filterOn=name&filterQuery=up&sortBy=name&isAscending=true&pageNumber=1&pageSize=10
     [HttpGet]
-    public async Task<IActionResult> GetAllWalksAsync([FromQuery] string? filterOn, [FromQuery] string? filterQuery, [FromQuery] string? sortBy, [FromQuery] bool? isAscending)
+    public async Task<IActionResult> GetAllWalksAsync([FromQuery] string? filterOn, [FromQuery] string? filterQuery, [FromQuery] string? sortBy, [FromQuery] bool? isAscending, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 1000)
     {   //Get all walks from the database
                 //if ascend is nullable make it a true
         var walksDomain = await walkRepository.GetAllAsync(filterOn, filterQuery, sortBy, isAscending?? true);

@@ -43,7 +43,7 @@ namespace NZWalksAPI.Reositories
             return existingWalk;
         }
 
-        public async Task<List<Walk>> GetAllAsync(string? filterOn=null, string? filterQuery=null, string? sortBy=null,bool? isAscending=true)
+        public async Task<List<Walk>> GetAllAsync(string? filterOn=null, string? filterQuery=null, string? sortBy=null,bool? isAscending=true, int pageNumber=1, int pageSize=1000)
         {  
             //Include details from region and difficulty tables as Querables
              var walks =  dbContext.Walks.Include("Difficulty").Include("Region").AsQueryable();
@@ -87,16 +87,20 @@ namespace NZWalksAPI.Reositories
                 {
                     walks = (isAscending ?? true) ? walks.OrderBy(x => x.LengthInKm) : walks.OrderByDescending(x => x.LengthInKm);
                 }
-            }//End sort
-
+            }//End sort            
             // If no sort specified, use default
-            if (string.IsNullOrWhiteSpace(sortBy))
-            {
-                walks = walks.OrderBy(x => x.Name); // Default sort
-            }
+if (string.IsNullOrWhiteSpace(sortBy))
+{
+    walks = walks.OrderBy(x => x.Name); // Default sort
+}
+
+
+            //Pagination if it has been asked for 
+            //Based on the fomular
+            var skippedResults = (pageNumber - 1) * pageSize;
 
             //return query results to User
-            return await walks.ToListAsync();
+            return await walks.Skip(skippedResults).Take(pageSize).ToListAsync(); //return  walks.ToListAsync();
             //Get all walks from the database
             ///Include details from region and difficulty tables
            // return await dbContext.Walks.Include("Difficulty").Include("Region").ToListAsync();

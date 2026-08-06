@@ -80,8 +80,9 @@ if (app.Environment.IsDevelopment())
 }
 
 //Middleware
+//Enforce HTTPS for Secure Communication
 app.UseHttpsRedirection();
-//
+// Authentication and Authorization
 app.UseAuthentication();
 //
 app.UseAuthorization();

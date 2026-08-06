@@ -13,7 +13,7 @@ namespace NZWalksAPI.Data
 
         //Seeding data in the database
         protected override void OnModelCreating(ModelBuilder modelBuilder) 
-        {
+        {       //Call the base method
             base.OnModelCreating(modelBuilder);
 
             var roles = new List<IdentityRole>

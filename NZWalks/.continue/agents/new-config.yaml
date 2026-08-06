@@ -1,0 +1,34 @@
+# This is an example configuration file
+# To learn more, see the full config.yaml reference: https://docs.continue.dev/reference
+
+name: Example Config
+version: 1.0.0
+schema: v1
+
+# Define which models can be used
+# https://docs.continue.dev/customization/models
+models:
+  - name: Qwen 2.5 Coder 7B
+    provider: ollama
+    model: qwen2.5-coder:7b
+    apiBase: http://localhost:11434
+    roles:
+      - apply
+      - autocomplete
+      - chat
+      - edit
+
+tabAutocompleteModel:
+  name: Qwen 2.5 Coder 7B
+  provider: ollama
+  model: qwen2.5-coder:7b
+  apiBase: http://localhost:11434
+
+systemMessage: "You are an expert programming assistant. Help users write, debug, and improve code."
+
+  defaultCompletionOptions:
+      contextLength: 200000
+      maxTokens: 64000
+    capabilities:
+      - tool_use
+      - image_input

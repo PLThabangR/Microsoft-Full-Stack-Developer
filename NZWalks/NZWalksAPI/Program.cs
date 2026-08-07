@@ -45,12 +45,12 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Password.RequiredUniqueChars = 1;
 });
 
-//Inject the region repository into the controller
+//Inject the region repository and servic into the controller
 builder.Services.AddScoped<IRegionRepository, SQLRegionRepository>();
-// Inject the walk repository into the controller
+// Inject the walk repository and service into the controller
 builder.Services.AddScoped<IWalkRepository, WalkServiceRepository>();
-
- 
+//Inject the toker service into the controller
+ builder.Services.AddScoped<ITokenService, TokenService>();
 //Inject auto mapper 
 builder.Services.AddAutoMapper(cfg => cfg.AddProfile(typeof(AutoMapperProfile)));
 

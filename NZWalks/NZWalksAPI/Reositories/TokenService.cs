@@ -6,7 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace NZWalksAPI.Reositories
 {
-    public class TokenService : IToken
+    public class TokenService : ITokenService
     {   private readonly IConfiguration configuration;
 
         //Inject Iconfiguration
@@ -14,7 +14,7 @@ namespace NZWalksAPI.Reositories
         {
             this.configuration = configuration;
         }
-        public string CreateTokenAsync(IdentityUser user, List<string> roles)
+        public string CreateToken(IdentityUser user, List<string> roles)
         {
             //Create Claims for roles
             var claims = new List<Claim>

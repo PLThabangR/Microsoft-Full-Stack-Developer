@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using NZWalksAPI.Models.Dtos.authDto;
+using NZWalksAPI.Reositories;
 
 namespace NZWalksAPI.Controllers
 {
@@ -11,11 +12,12 @@ namespace NZWalksAPI.Controllers
     public class AuthController : ControllerBase
 {           
     private readonly UserManager<IdentityUser> userManager;
-
+    private readonly ITokenService tokenService;
         //Constructor
-        public AuthController(UserManager<IdentityUser> userManager)
+        public AuthController(UserManager<IdentityUser> userManager,ITokenService tokenService)
         {
             this.userManager = userManager;
+            this.tokenService = tokenService;
 
         }
 
@@ -71,18 +73,34 @@ namespace NZWalksAPI.Controllers
                     // Generic message for security (don't reveal if user exists or password is wrong)
                     return Unauthorized("Invalid email or password");
                 }
+                //get roles from database
+                var roles = await userManager.GetRolesAsync(user);
 
+                //check roles are not null
+                if (roles == null)
+                {
+                    return BadRequest("User has no roles assigned");
+                }
+
+                // Generate JWT token
+                var token =  tokenService.CreateToken(user, roles.ToList());
+                
+                
+                
                 // Return successful response with token
                 return Ok(new
                 {
-                    message = "User logged in successfully"
+                    message = "User logged in successfully",
+                    token = token,  // Just the token string
+                    email = user.Email,
+                    roles = roles
                 });
 
 
             }
-            catch (Exception ex)
+            catch (Exception error)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(error.Message);
             }
         }//end of loginfunc
 

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -21,21 +22,27 @@ namespace NZWalksAPI.Controllers
         // private variable to hold the region repositor
         private readonly IRegionRepository regionRepository;
         private readonly IMapper mapper;
+        private readonly ILogger logger;
         //inject the region repository into the controller
         //Constructor injection of the region repository
-        public RegionsController(IRegionRepository regionRepository,IMapper mapper)
+        public RegionsController(IRegionRepository regionRepository,IMapper mapper,ILogger<RegionsController> logger)
         {
 
             //assign the injected region repository to the private variable
            
             this.regionRepository = regionRepository;
             this.mapper = mapper;
+            this.logger = logger;
         }
 
         [HttpGet]
         // GET : https://localhost:7000/api/Regions
         public async  Task<IActionResult> GetAllRegions()
         {
+            try{
+            // /Use the log 
+            logger.LogInformation("Getting all regions");
+            
             //Get all regions from the database
             var regionDomain = await regionRepository.GetAllAsync();
 
@@ -43,9 +50,15 @@ namespace NZWalksAPI.Controllers
             
             ///Use auuto mapper this replace the need for a loop
             var regionsDto = mapper.Map<List<RegionDto>>(regionDomain);
-            
+            //logger.LogInformation("Returning {count} regions", JsonSerializer.Serialize(regionsDto).Length);
 
+        
             return Ok(regionsDto);
+
+            }catch(Exception ex){
+                    logger.LogError(ex, ex.Message);
+                 return BadRequest(ex.Message);   
+            }
         }// end of GetAllRegions
 
 

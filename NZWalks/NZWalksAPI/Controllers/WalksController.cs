@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NZWalksAPI.CustomAction;
@@ -25,7 +26,8 @@ namespace NZWalksAPI.Controllers
     [HttpPost]
 // POST : https://localhost:7000/api/Walks
  [ValidateModel]
-public async Task<IActionResult> AddWalkAsync([FromBody] CreateWalkDto createWalkDto)
+        [Authorize(Roles="ADMIN,USER")] //Enable authorization 
+        public async Task<IActionResult> AddWalkAsync([FromBody] CreateWalkDto createWalkDto)
 {  
     
     //map dto to domain model
@@ -47,7 +49,8 @@ public async Task<IActionResult> AddWalkAsync([FromBody] CreateWalkDto createWal
     //GET with filtering,sorting and pagination 
     // : https://localhost:7000/api/Walks?filterOn=name&filterQuery=up&sortBy=name&isAscending=true&pageNumber=1&pageSize=10
     [HttpGet]
-    public async Task<IActionResult> GetAllWalksAsync([FromQuery] string? filterOn, [FromQuery] string? filterQuery, [FromQuery] string? sortBy, [FromQuery] bool? isAscending, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 1000)
+        [Authorize(Roles="USER")] //Enable authorization 
+        public async Task<IActionResult> GetAllWalksAsync([FromQuery] string? filterOn, [FromQuery] string? filterQuery, [FromQuery] string? sortBy, [FromQuery] bool? isAscending, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 1000)
     {   //Get all walks from the database
                 //if ascend is nullable make it a true
         var walksDomain = await walkRepository.GetAllAsync(filterOn, filterQuery, sortBy, isAscending?? true);
@@ -59,6 +62,7 @@ public async Task<IActionResult> AddWalkAsync([FromBody] CreateWalkDto createWal
     //GET : https://localhost:7000/api/Walks/{id}
     [HttpGet]
     [Route("{id:guid}")] //,make it type safe
+    [Authorize(Roles="USER")]
     public async Task<IActionResult> GetWalkAsync([FromRoute]Guid id)
     {
         //Get the region from the database
@@ -77,6 +81,7 @@ public async Task<IActionResult> AddWalkAsync([FromBody] CreateWalkDto createWal
     //PUT : https://localhost:7000/api/Walks/{id}
     [HttpPut]
     [Route("{id:guid}")] //,make it type safe
+    [Authorize(Roles="ADMIN")]
         [ValidateModel]
         public async Task<IActionResult> UpdateWalkAsync([FromRoute] Guid id, [FromBody] UpdateWalkDto updateWalkDto)
     {   
@@ -102,6 +107,7 @@ public async Task<IActionResult> AddWalkAsync([FromBody] CreateWalkDto createWal
     //DELETE : https://localhost:7000/api/Regions/{id}
     [HttpDelete]
     [Route("{id:guid}")] //,make it type safe
+    [Authorize(Roles="ADMIN")]
     public async Task<IActionResult> DeleteWalkAsync([FromRoute] Guid id)
     {
         //Check if the region exists in the database

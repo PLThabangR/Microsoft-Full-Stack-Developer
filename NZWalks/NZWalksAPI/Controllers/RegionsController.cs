@@ -15,7 +15,7 @@ namespace NZWalksAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    [Authorize]//Attribute 
     public class RegionsController : ControllerBase
     {
         // private variable to hold the region repositor
